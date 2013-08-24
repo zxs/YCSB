@@ -20,6 +20,7 @@ public class ByteArrayByteIterator extends ByteIterator {
 	byte[] str;
 	int off;
 	final int len;
+
 	public ByteArrayByteIterator(byte[] s) {
 		this.str = s;
 		this.off = 0;

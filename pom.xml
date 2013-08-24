@@ -1,112 +1,325 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.yahoo.ycsb</groupId>
-  <artifactId>root</artifactId>
-  <version>0.1.4</version>
-  <packaging>pom</packaging>
+	<groupId>com.yahoo.ycsb</groupId>
+	<artifactId>root</artifactId>
+	<version>0.1.5</version>
+	<packaging>pom</packaging>
 
-  <name>YCSB Root</name>
-
-  <description>
+	<name>YCSB Root</name>
+	<description>
     This is the top level project that builds, packages the core and all the DB bindings for YCSB infrastructure.
-  </description>
-  <dependencies>
-    <!-- voldemort -->
-    <dependency>
-      <groupId>checkstyle</groupId>
-      <artifactId>checkstyle</artifactId>
-      <version>5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.collections</groupId>
-      <artifactId>google-collections</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <!--
-    Nail down slf4j version to 1.6 so that it defaults to no-op logger.
-    http://www.slf4j.org/codes.html#StaticLoggerBinder
-    -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.6.4</version>
-    </dependency>
-  </dependencies>
- 
-  <!-- Properties Management -->
-  <properties>
-    <maven.assembly.version>2.2.1</maven.assembly.version>
-    <hbase.version>0.92.1</hbase.version>
-    <cassandra.version>0.7.0</cassandra.version>
-    <infinispan.version>7.1.0.CR1</infinispan.version>
-    <openjpa.jdbc.version>2.1.1</openjpa.jdbc.version>
-    <mapkeeper.version>1.0</mapkeeper.version>
-    <mongodb.version>2.9.0</mongodb.version>
-    <orientdb.version>1.0.1</orientdb.version>
-    <redis.version>2.0.0</redis.version>
-    <voldemort.version>0.81</voldemort.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <thrift.version>0.8.0</thrift.version>
-    <hypertable.version>0.9.5.6</hypertable.version>
-  </properties>
+	</description>
 
-  <modules>
-    <!--module>build-tools</module-->
-    <module>cassandra</module>
-    <module>core</module>
-    <module>hbase</module>
-    <module>hypertable</module>
-    <module>dynamodb</module>
-    <module>elasticsearch</module>
-    <!--<module>gemfire</module>-->
-    <module>infinispan</module>
-    <module>jdbc</module>
-    <module>mapkeeper</module>
-    <module>mongodb</module>
-    <module>orientdb</module>
-    <!--module>nosqldb</module-->
-    <module>redis</module>
-    <module>voldemort</module>
-    <module>distribution</module>
-  </modules>
+	<!-- Properties Management -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.assembly.version>2.4</maven.assembly.version>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <consoleOutput>true</consoleOutput>
-          <configLocation>checkstyle.xml</configLocation>
-        </configuration>
-        <executions>
-          <execution>
-          <id>validate</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>checkstyle</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+		<jackson.api.version>1.9.4</jackson.api.version>
+
+		<testng.version>6.1.1</testng.version>
+
+		<slf4j.version>1.6.4</slf4j.version>
+		<logback.version>1.0.7</logback.version>
+
+		<cassandra.version>0.7.0</cassandra.version>
+
+		<!-- used by dynamodb-binding -->
+		<aws-java-sdk.version>1.3.33</aws-java-sdk.version>
+
+		<elasticsearch-version>0.19.8</elasticsearch-version>
+
+		<hbase.version>0.94.6-cdh4.3.0</hbase.version>
+		<hadoop.version>2.0.0-cdh4.3.0</hadoop.version>
+
+		<hypertable.version>0.9.5.6</hypertable.version>
+		<thrift.version>0.9.0</thrift.version>
+
+		<infinispan.version>7.1.0.CR1</infinispan.version>
+
+		<!-- used by jdbc-binding -->
+		<openjpa.jdbc.version>2.1.1</openjpa.jdbc.version>
+
+		<mapkeeper.version>1.0</mapkeeper.version>
+
+		<mongodb.version>2.10.1</mongodb.version>
+
+		<orientdb.version>1.3.0</orientdb.version>
+
+		<redis.version>2.1.0</redis.version>
+
+		<voldemort.version>0.81</voldemort.version>
+	</properties>
+
+	<!-- Common Dependencies -->
+	<dependencies>
+		<dependency>
+			<groupId>checkstyle</groupId>
+			<artifactId>checkstyle</artifactId>
+			<version>5.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>junit</groupId>
+  					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.collections</groupId>
+			<artifactId>google-collections</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<!-- Nail down slf4j version to 1.6 so that it defaults to no-op logger. 
+			http://www.slf4j.org/codes.html#StaticLoggerBinder -->
+		<!-- @@@@@ LOGGING begin @@@@@ -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!-- 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		 -->
+		<!-- log4j invoke slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- common-logging invoke slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- java.util.logging invoke slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- @@@@@ LOGGING end @@@@@ -->
+	</dependencies>
+
+	<!-- Dependency Management -->
+	<dependencyManagement>
+
+
+		<dependencies>
+			<!-- core dep. -->
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>${jackson.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>${jackson.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>${testng.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- cassandra-binding dep. -->
+			<dependency>
+				<groupId>org.apache.cassandra</groupId>
+				<artifactId>cassandra-all</artifactId>
+				<version>${cassandra.version}</version>
+			</dependency>
+
+			<!-- dynamodb-binding dep. -->
+			<dependency>
+				<groupId>com.amazonaws</groupId>
+				<artifactId>aws-java-sdk</artifactId>
+				<version>${aws-java-sdk.version}</version>
+			</dependency>
+
+			<!-- hbase-binding dep. -->
+			<dependency>
+				<groupId>org.apache.hbase</groupId>
+				<artifactId>hbase</artifactId>
+				<version>${hbase.version}</version>
+			</dependency>
+
+			<!-- <dependency> <groupId>org.apache.hadoop</groupId> <artifactId>hadoop-core</artifactId> 
+				<version>1.0.0</version> </dependency> -->
+
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-common</artifactId>
+				<version>${hadoop.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-mapreduce-client-core</artifactId>
+				<version>${hadoop.version}</version>
+			</dependency>
+
+			<!-- hypertable-binding dep. -->
+			<dependency>
+				<groupId>org.hypertable</groupId>
+				<artifactId>hypertable</artifactId>
+				<version>${hypertable.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.thrift</groupId>
+				<artifactId>libthrift</artifactId>
+				<version>${thrift.version}</version>
+			</dependency>
+			
+			<!-- jdbc-binding dep. -->
+			<dependency>
+				<groupId>org.apache.openjpa</groupId>
+				<artifactId>openjpa-jdbc</artifactId>
+				<version>${openjpa.jdbc.version}</version>
+			</dependency>
+
+			<!-- mapkeeper-binding dep. -->
+
+			<!-- mongodb-binding dep. -->
+			<dependency>
+				<groupId>org.mongodb</groupId>
+				<artifactId>mongo-java-driver</artifactId>
+				<version>${mongodb.version}</version>
+			</dependency>
+			
+			<!-- orientdb-binding dep. -->
+			<dependency>
+				<groupId>com.orientechnologies</groupId>
+				<artifactId>orientdb-core</artifactId>
+				<version>${orientdb.version}</version>
+			</dependency>
+		
+			<!-- redis-binding dep. -->
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>${redis.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<!--module>build-tools</module -->
+		<module>core</module>
+		<module>distribution</module>
+
+		<module>cassandra</module>
+		<module>dynamodb</module>
+		<module>elasticsearch</module>
+		<!--<module>gemfire</module> -->
+		<module>hbase</module>
+		<module>hypertable</module>
+		<!-- <module>infinispan</module> -->
+		<module>jdbc</module>
+		<!-- <module>mapkeeper</module> -->
+		<module>mongodb</module>
+		<!--module>nosqldb</module -->
+		<module>orientdb</module>
+		<module>redis</module>
+		<!-- <module>voldemort</module> -->
+
+	</modules>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<consoleOutput>true</consoleOutput>
+					<configLocation>checkstyle.xml</configLocation>
+				</configuration>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>checkstyle</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven.assembly.version}</version>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-checkstyle-plugin
+										</artifactId>
+										<versionRange>[2.6,)</versionRange>
+										<goals>
+											<goal>checkstyle</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

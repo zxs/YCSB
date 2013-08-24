@@ -18,28 +18,30 @@ package com.yahoo.ycsb;
 
 import java.util.Iterator;
 import java.util.ArrayList;
+
 /**
- * YCSB-specific buffer class.  ByteIterators are designed to support
- * efficient field generation, and to allow backend drivers that can stream
- * fields (instead of materializing them in RAM) to do so.
+ * YCSB-specific buffer class. ByteIterators are designed to support efficient
+ * field generation, and to allow backend drivers that can stream fields
+ * (instead of materializing them in RAM) to do so.
  * <p>
- * YCSB originially used String objects to represent field values.  This led to
+ * YCSB originially used String objects to represent field values. This led to
  * two performance issues.
- * </p><p>
+ * </p>
+ * <p>
  * First, it leads to unnecessary conversions between UTF-16 and UTF-8, both
- * during field generation, and when passing data to byte-based backend
- * drivers.
- * </p><p>
- * Second, Java strings are represented internally using UTF-16, and are
- * built by appending to a growable array type (StringBuilder or
- * StringBuffer), then calling a toString() method.  This leads to a 4x memory
- * overhead as field values are being built, which prevented YCSB from
- * driving large object stores.
+ * during field generation, and when passing data to byte-based backend drivers.
+ * </p>
+ * <p>
+ * Second, Java strings are represented internally using UTF-16, and are built
+ * by appending to a growable array type (StringBuilder or StringBuffer), then
+ * calling a toString() method. This leads to a 4x memory overhead as field
+ * values are being built, which prevented YCSB from driving large object
+ * stores.
  * </p>
  * The StringByteIterator class contains a number of convenience methods for
  * backend drivers that convert between Map&lt;String,String&gt; and
  * Map&lt;String,ByteBuffer&gt;.
- *
+ * 
  * @author sears
  */
 public abstract class ByteIterator implements Iterator<Byte> {
@@ -50,14 +52,15 @@ public abstract class ByteIterator implements Iterator<Byte> {
 	@Override
 	public Byte next() {
 		throw new UnsupportedOperationException();
-		//return nextByte();
+		// return nextByte();
 	}
 
 	public abstract byte nextByte();
-        /** @return byte offset immediately after the last valid byte */
+
+	/** @return byte offset immediately after the last valid byte */
 	public int nextBuf(byte[] buf, int buf_off) {
 		int sz = buf_off;
-		while(sz < buf.length && hasNext()) {
+		while (sz < buf.length && hasNext()) {
 			buf[sz] = nextByte();
 			sz++;
 		}
@@ -65,28 +68,39 @@ public abstract class ByteIterator implements Iterator<Byte> {
 	}
 
 	public abstract long bytesLeft();
-	
+
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
 
-	/** Consumes remaining contents of this object, and returns them as a string. */
+	/**
+	 * Consumes remaining contents of this object, and returns them as a string.
+	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		while(this.hasNext()) { sb.append((char)nextByte()); }
+		while (this.hasNext()) {
+			sb.append((char) nextByte());
+		}
 		return sb.toString();
 	}
-	/** Consumes remaining contents of this object, and returns them as a byte array. */
+
+	/**
+	 * Consumes remaining contents of this object, and returns them as a byte
+	 * array.
+	 */
 	public byte[] toArray() {
-	    long left = bytesLeft();
-	    if(left != (int)left) { throw new ArrayIndexOutOfBoundsException("Too much data to fit in one array!"); }
-	    byte[] ret = new byte[(int)left];
-	    int off = 0;
-	    while(off < ret.length) {
-		off = nextBuf(ret, off);
-	    }
-	    return ret;
+		long left = bytesLeft();
+		if (left != (int) left) {
+			throw new ArrayIndexOutOfBoundsException(
+					"Too much data to fit in one array!");
+		}
+		byte[] ret = new byte[(int) left];
+		int off = 0;
+		while (off < ret.length) {
+			off = nextBuf(ret, off);
+		}
+		return ret;
 	}
 
 }
